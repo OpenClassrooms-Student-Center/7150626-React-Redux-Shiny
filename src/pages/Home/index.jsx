@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { StyledLink } from '../../utils/style/Atoms'
-import { useTheme } from '../../utils/hooks'
 import HomeIllustration from '../../assets/home-illustration.svg'
+import { useSelector } from 'react-redux'
+import { selectTheme } from '../../utils/selectors'
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ const Illustration = styled.img`
 `
 
 function Home() {
-  const { theme } = useTheme()
+  const theme = useSelector(selectTheme)
 
   return (
     <HomeWrapper>

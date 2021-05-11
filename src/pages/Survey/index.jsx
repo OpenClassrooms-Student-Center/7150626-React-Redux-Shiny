@@ -5,7 +5,9 @@ import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
 import { SurveyContext } from '../../utils/context'
-import { useFetch, useTheme } from '../../utils/hooks'
+import { useFetch } from '../../utils/hooks'
+import { useSelector } from 'react-redux'
+import { selectTheme } from '../../utils/selectors'
 
 const SurveyContainer = styled.div`
   display: flex;
@@ -66,7 +68,7 @@ function Survey() {
   const questionNumberInt = parseInt(questionNumber)
   const prevQuestionNumber = questionNumberInt === 1 ? 1 : questionNumberInt - 1
   const nextQuestionNumber = questionNumberInt + 1
-  const { theme } = useTheme()
+  const theme = useSelector(selectTheme)
 
   const { saveAnswers, answers } = useContext(SurveyContext)
 
