@@ -1,5 +1,6 @@
 import produce from 'immer'
 import { selectFreelance } from '../utils/selectors'
+import { createAction } from '@reduxjs/toolkit'
 
 // le state initial de cette feature est un objet vide
 const initialState = {
@@ -8,7 +9,6 @@ const initialState = {
 }
 
 const FETCHING = 'freelance/fetching'
-const RESOLVED = 'freelance/resolved'
 const REJECTED = 'freelance/rejected'
 
 // les actions contiennent l'Id du freelance en payload
@@ -17,10 +17,12 @@ const freelanceFetching = (freelanceId) => ({
   type: FETCHING,
   payload: { freelanceId },
 })
-const freelanceResolved = (freelanceId, data) => ({
-  type: RESOLVED,
-  payload: { freelanceId, data },
-})
+const freelanceResolved = createAction(
+  'freelance/resolved',
+  (freelanceId, data) => ({
+    payload: { freelanceId, data },
+  })
+)
 const freelanceRejected = (freelanceId, error) => ({
   type: REJECTED,
   payload: { freelanceId, error },
@@ -48,7 +50,11 @@ export default function freelanceReducer(state = initialState, action) {
   const { type, payload } = action
   return produce(state, (draft) => {
     // si l'action est une des action de freelance
-    if (type === RESOLVED || type === FETCHING || type === REJECTED) {
+    if (
+      type === freelanceResolved.toString() ||
+      type === FETCHING ||
+      type === REJECTED
+    ) {
       // on vérifie que le state contient la propriété correspondante à l'Id du freelance
       if (draft[payload.freelanceId] === undefined) {
         // si elle n'existe pas, on l'initialise avec void
@@ -72,7 +78,7 @@ export default function freelanceReducer(state = initialState, action) {
         }
         return
       }
-      case RESOLVED: {
+      case freelanceResolved.toString(): {
         if (
           draft[payload.freelanceId].status === 'pending' ||
           draft[payload.freelanceId].status === 'updating'
