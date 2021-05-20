@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 import Card from '../../components/Card'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
-import { useFetch } from '../../utils/hooks'
 import { useSelector, useStore } from 'react-redux'
-import { selectTheme } from '../../utils/selectors'
+import { selectFreelances, selectTheme } from '../../utils/selectors'
 import { useEffect } from 'react'
 import { fetchOrUpdateFreelances } from '../../features/freelances'
 
@@ -53,13 +52,10 @@ function Freelances() {
   }, [store])
 
   const theme = useSelector(selectTheme)
-  const { data, isLoading, error } = useFetch(
-    `http://localhost:8000/freelances`
-  )
 
-  const freelancersList = data?.freelancersList
+  const freelances = useSelector(selectFreelances)
 
-  if (error) {
+  if (freelances.status === 'rejected') {
     return <span>Il y a un problème</span>
   }
 
@@ -69,13 +65,13 @@ function Freelances() {
       <PageSubtitle theme={theme}>
         Chez Shiny nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
-      {isLoading ? (
+      {freelances.status === 'pending' || freelances.status === 'void' ? (
         <LoaderWrapper>
           <Loader theme={theme} data-testid="loader" />
         </LoaderWrapper>
       ) : (
         <CardsContainer>
-          {freelancersList?.map((profile) => (
+          {freelances.data.freelancersList.map((profile) => (
             <Link key={`freelance-${profile.id}`} to={`/profile/${profile.id}`}>
               <Card
                 label={profile.job}
