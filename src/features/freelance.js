@@ -7,25 +7,23 @@ const initialState = {
   // 3: { status: 'void' }
 }
 
-const FETCHING = 'freelance/fetching'
-const REJECTED = 'freelance/rejected'
-
-// les actions contiennent l'Id du freelance en payload
-
-const freelanceFetching = (freelanceId) => ({
-  type: FETCHING,
+const freelanceFetching = createAction('freelance/fetching', (freelanceId) => ({
   payload: { freelanceId },
-})
+}))
+
 const freelanceResolved = createAction(
   'freelance/resolved',
   (freelanceId, data) => ({
     payload: { freelanceId, data },
   })
 )
-const freelanceRejected = (freelanceId, error) => ({
-  type: REJECTED,
-  payload: { freelanceId, error },
-})
+
+const freelanceRejected = createAction(
+  'freelance/rejected',
+  (freelanceId, error) => ({
+    payload: { freelanceId, error },
+  })
+)
 
 export async function fetchOrUpdateFreelance(store, freelanceId) {
   const selectFreelanceById = selectFreelance(freelanceId)
@@ -53,7 +51,7 @@ function setVoidIfUndefined(draft, freelanceId) {
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(FETCHING, (draft, action) => {
+    .addCase(freelanceFetching, (draft, action) => {
       setVoidIfUndefined(draft, action.payload.freelanceId)
       if (draft[action.payload.freelanceId].status === 'void') {
         draft[action.payload.freelanceId].status = 'pending'
@@ -81,7 +79,7 @@ export default createReducer(initialState, (builder) =>
       }
       return
     })
-    .addCase(REJECTED, (draft, action) => {
+    .addCase(freelanceRejected, (draft, action) => {
       setVoidIfUndefined(draft, action.payload.freelanceId)
       if (
         draft[action.payload.freelanceId].status === 'pending' ||
