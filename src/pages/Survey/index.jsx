@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
 import { SurveyContext } from '../../utils/context'
-import { useSelector, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectSurvey, selectTheme } from '../../utils/selectors'
 import { fetchOrUpdateSurvey } from '../../features/survey'
 
@@ -77,10 +77,10 @@ function Survey() {
   }
 
   const survey = useSelector(selectSurvey)
-  const store = useStore()
+  const dispatch = useDispatch()
   useEffect(() => {
-    fetchOrUpdateSurvey(store)
-  }, [store])
+    dispatch(fetchOrUpdateSurvey)
+  }, [dispatch])
 
   const surveyData = survey.data?.surveyData
 
