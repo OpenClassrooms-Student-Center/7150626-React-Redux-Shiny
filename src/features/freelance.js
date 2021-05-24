@@ -25,21 +25,25 @@ const freelanceRejected = createAction(
   })
 )
 
-export async function fetchOrUpdateFreelance(store, freelanceId) {
-  const selectFreelanceById = selectFreelance(freelanceId)
-  const status = selectFreelanceById(store.getState()).status
-  if (status === 'pending' || status === 'updating') {
-    return
-  }
-  store.dispatch(freelanceFetching(freelanceId))
-  try {
-    const response = await fetch(
-      `http://localhost:8000/freelance?id=${freelanceId}`
-    )
-    const data = await response.json()
-    store.dispatch(freelanceResolved(freelanceId, data))
-  } catch (error) {
-    store.dispatch(freelanceRejected(freelanceId, error))
+export function fetchOrUpdateFreelance(freelanceId) {
+  // on retourne un thunk
+  return async (dispatch, getState) => {
+    // ...
+    const selectFreelanceById = selectFreelance(freelanceId)
+    const status = selectFreelanceById(getState()).status
+    if (status === 'pending' || status === 'updating') {
+      return
+    }
+    dispatch(freelanceFetching(freelanceId))
+    try {
+      const response = await fetch(
+        `http://localhost:8000/freelance?id=${freelanceId}`
+      )
+      const data = await response.json()
+      dispatch(freelanceResolved(freelanceId, data))
+    } catch (error) {
+      dispatch(freelanceRejected(freelanceId, error))
+    }
   }
 }
 
