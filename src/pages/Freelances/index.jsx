@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Card from '../../components/Card'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
-import { useSelector, useStore } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectFreelances, selectTheme } from '../../utils/selectors'
 import { useEffect } from 'react'
 import { fetchOrUpdateFreelances } from '../../features/freelances'
@@ -39,17 +39,15 @@ const LoaderWrapper = styled.div`
 `
 
 function Freelances() {
-  // on récupère le store grâce au hook useStore()
-  const store = useStore()
+  // On utilise dispatch pour exécuter un thunk
+  const dispatch = useDispatch()
 
   // on utilise useEffect pour lancer la requête au chargement du composant
   useEffect(() => {
-    // on exécute notre action asynchrone avec le store en paramètre
-    fetchOrUpdateFreelances(store)
-    // On suit la recommandation d'ESLint de passer le store
-    // en dépendances car il est utilisé dans l'effet
-    // cela n'as pas d'impacte sur le fonctionnement car le store ne change jamais
-  }, [store])
+    // On envoie le thunk à dispatch
+    // C'est Redux-Thunk qui va s'occuper de l'exécuter pour nous
+    dispatch(fetchOrUpdateFreelances)
+  }, [dispatch])
 
   const theme = useSelector(selectTheme)
 
