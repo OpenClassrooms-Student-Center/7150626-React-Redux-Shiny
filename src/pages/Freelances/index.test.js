@@ -30,7 +30,7 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-it.skip('Should display freelancers names after loader is removed', async () => {
+it('Should display freelancers names after loader is removed', async () => {
   render(<Freelances />)
 
   await waitForElementToBeRemoved(() => screen.getByTestId('loader'))
