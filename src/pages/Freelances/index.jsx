@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom'
 import Card from '../../components/Card'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { selectTheme } from '../../utils/selectors'
-import { useEffect } from 'react'
-import { fetchOrUpdateFreelances } from '../../features/freelances'
 import { useQuery } from 'react-query'
 
 const CardsContainer = styled.div`
@@ -40,16 +38,6 @@ const LoaderWrapper = styled.div`
 `
 
 function Freelances() {
-  // On utilise dispatch pour exécuter un thunk
-  const dispatch = useDispatch()
-
-  // on utilise useEffect pour lancer la requête au chargement du composant
-  useEffect(() => {
-    // On envoie le thunk à dispatch
-    // C'est Redux-Thunk qui va s'occuper de l'exécuter pour nous
-    dispatch(fetchOrUpdateFreelances)
-  }, [dispatch])
-
   const {
     // les données renvoyées par le serveur
     // null si la requête n'est pas encore résolue
