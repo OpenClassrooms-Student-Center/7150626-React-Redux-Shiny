@@ -4,8 +4,11 @@ import themeReducer from '../../features/theme'
 import answersReducer from '../../features/answers'
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 export function render(ui, options) {
+  const queryClient = new QueryClient()
+
   const store = configureStore({
     reducer: {
       theme: themeReducer,
@@ -15,9 +18,12 @@ export function render(ui, options) {
 
   function Wrapper({ children }) {
     return (
-      <MemoryRouter {...options}>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
+      // on utilise le QueryClientProvider pour que useQuery fonctionne dans les tests !
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter {...options}>
+          <Provider store={store}>{children}</Provider>
+        </MemoryRouter>
+      </QueryClientProvider>
     )
   }
   rtlRender(ui, { wrapper: Wrapper })
